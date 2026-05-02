@@ -9,7 +9,10 @@ type factory struct {
 	repoFactory repository.Factory
 }
 
-func (f *factory) AdminService() admin.Store {
-	adminRepo := f.repoFactory.AdminRepository()
-	return admin.New(adminRepo)
+func New(repoFactory repository.Factory) Factory {
+	return &factory{repoFactory: repoFactory}
+}
+
+func (f *factory) AdminStore() admin.Store {
+	return admin.New(f.repoFactory.AdminRepository())
 }

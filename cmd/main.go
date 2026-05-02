@@ -1,15 +1,25 @@
 package main
 
 import (
-	"clinicalmate/config"
 	"clinicalmate/internal/database"
-	"clinicalmate/internal/router/admin"
+	controllerFactory "clinicalmate/internal/factory/controller"
+	repoFactory "clinicalmate/internal/factory/repository"
+	serviceFactory "clinicalmate/internal/factory/service"
+	storeFactory "clinicalmate/internal/factory/store"
+	adminRouter "clinicalmate/internal/router/admin"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	cfg := config.Load()
-	db := database.Connect(cfg.DBDSN)
+	rdb := database.New()
+	repoF := repoFactory.New(rdb.Connect())
+	storeF := storeFactory.New(repoF)
+	serviceF := serviceFactory.New(storeF)
+	controllerF := controllerFactory.New(serviceF)
 
-	r := admin.New(db)
-	r.Run(":" + cfg.Port)
+	g := gin.Default()
+	adminR := adminRouter.New(g.Group("/api/v1"))
+	adminR.Set(controllerF)
+
+	_ = g.Run(":8080")
 }

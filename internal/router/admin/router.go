@@ -1,15 +1,19 @@
 package admin
 
 import (
+	"clinicalmate/internal/factory/controller"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func New(db *gorm.DB) *gin.Engine {
-	r := gin.Default()
+type router struct {
+	group *gin.RouterGroup
+}
 
-	v1 := r.Group("/api/v1")
-	_ = v1
-
+func New(group *gin.RouterGroup) Router {
+	r := &router{group: group}
 	return r
+}
+
+func (r *router) Set(factory controller.Factory) {
+	r.group.GET("/admin", func(c *gin.Context) {})
 }

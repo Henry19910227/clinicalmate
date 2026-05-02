@@ -2,6 +2,7 @@ package service
 
 import (
 	"clinicalmate/internal/factory/store"
+	adminSvc "clinicalmate/internal/service/admin"
 )
 
 type factory struct {
@@ -9,6 +10,9 @@ type factory struct {
 }
 
 func New(storeFactory store.Factory) Factory {
-	serviceFactory := &factory{storeFactory: storeFactory}
-	return serviceFactory
+	return &factory{storeFactory: storeFactory}
+}
+
+func (f *factory) AdminService() adminSvc.Service {
+	return adminSvc.New(f.storeFactory.AdminStore())
 }
