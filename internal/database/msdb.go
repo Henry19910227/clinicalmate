@@ -1,22 +1,30 @@
 package database
 
 import (
+	model "clinicalmate/internal/model/config"
 	"fmt"
+	"log"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"log"
 )
 
 type ms struct {
 	db *gorm.DB
 }
 
-func New() RDB {
-	dns := fmt.Sprintf("%v:%v@tcp(%v)/%v", "henry", "aaaa8027", "127.0.0.1:3306", "game")
-	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{})
+func New(cfg *model.DatabaseConfig) RDB {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("failed to connect database: %v", err)
 	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatalf("failed to get sql.DB: %v", err)
+	}
+	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
 	return &ms{db: db.Debug()}
 }
 
