@@ -1,8 +1,8 @@
 package config
 
 type Config struct {
-	App      AppConfig      `yaml:"app"`
-	Database DatabaseConfig `yaml:"database"`
+	App      AppConfig   `yaml:"app"`
+	Database MysqlConfig `yaml:"database"`
 }
 
 type AppConfig struct {
@@ -11,7 +11,7 @@ type AppConfig struct {
 	Port int    `yaml:"port"`
 }
 
-type DatabaseConfig struct {
+type MysqlConfig struct {
 	Driver       string `yaml:"driver"`         // 数据库驱动
 	Host         string `yaml:"host"`           // 数据库地址
 	Port         int    `yaml:"port"`           // 数据库端口

@@ -1,18 +1,20 @@
 package controller
 
 import (
-	adminCtrl "clinicalmate/internal/controller/admin"
-	"clinicalmate/internal/factory/service"
+	adminController "clinicalmate/internal/controller/admin"
+	serviceFactory "clinicalmate/internal/factory/service"
 )
 
 type factory struct {
-	serviceFactory service.Factory
+	serviceFac serviceFactory.Factory
+	adminCtrl  adminController.Controller
 }
 
-func New(serviceFactory service.Factory) Factory {
-	return &factory{serviceFactory: serviceFactory}
+func New(serviceFac serviceFactory.Factory) Factory {
+	adminCtrl := adminController.New(serviceFac)
+	return &factory{serviceFac: serviceFac, adminCtrl: adminCtrl}
 }
 
-func (f *factory) AdminController() adminCtrl.Controller {
-	return adminCtrl.New(f.serviceFactory.AdminService())
+func (f *factory) AdminController() adminController.Controller {
+	return f.adminCtrl
 }

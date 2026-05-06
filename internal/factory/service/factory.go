@@ -1,18 +1,20 @@
 package service
 
 import (
-	"clinicalmate/internal/factory/store"
-	adminSvc "clinicalmate/internal/service/admin"
+	storeFactory "clinicalmate/internal/factory/store"
+	adminService "clinicalmate/internal/service/admin"
 )
 
 type factory struct {
-	storeFactory store.Factory
+	storeFac storeFactory.Factory
+	adminSvc adminService.Service
 }
 
-func New(storeFactory store.Factory) Factory {
-	return &factory{storeFactory: storeFactory}
+func New(storeFactory storeFactory.Factory) Factory {
+	adminSvc := adminService.New(storeFactory)
+	return &factory{storeFac: storeFactory, adminSvc: adminSvc}
 }
 
-func (f *factory) AdminService() adminSvc.Service {
-	return adminSvc.New(f.storeFactory.AdminStore())
+func (f *factory) AdminService() adminService.Service {
+	return f.adminSvc
 }

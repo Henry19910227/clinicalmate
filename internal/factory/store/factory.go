@@ -1,18 +1,20 @@
 package store
 
 import (
-	"clinicalmate/internal/factory/repository"
-	"clinicalmate/internal/store/admin"
+	repositoryFactory "clinicalmate/internal/factory/repository"
+	adminStore "clinicalmate/internal/store/admin"
 )
 
 type factory struct {
-	repoFactory repository.Factory
+	repositoryFac repositoryFactory.Factory
+	adminSto      adminStore.Store
 }
 
-func New(repoFactory repository.Factory) Factory {
-	return &factory{repoFactory: repoFactory}
+func New(repositoryFac repositoryFactory.Factory) Factory {
+	adminSto := adminStore.New(repositoryFac)
+	return &factory{repositoryFac: repositoryFac, adminSto: adminSto}
 }
 
-func (f *factory) AdminStore() admin.Store {
-	return admin.New(f.repoFactory.AdminRepository())
+func (f *factory) AdminStore() adminStore.Store {
+	return f.adminSto
 }

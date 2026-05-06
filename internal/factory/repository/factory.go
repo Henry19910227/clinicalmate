@@ -1,21 +1,20 @@
 package repository
 
 import (
-	adminRepo "clinicalmate/internal/repository/admin"
-	"gorm.io/gorm"
+	infraFactory "clinicalmate/internal/factory/infra"
+	adminRepository "clinicalmate/internal/repository/admin"
 )
 
 type factory struct {
-	db              *gorm.DB
-	adminRepository adminRepo.Repository
+	adminRepo adminRepository.Repository
 }
 
-func New(db *gorm.DB) Factory {
-	adminR := adminRepo.New(db)
-	repoFactory := &factory{db: db, adminRepository: adminR}
+func New(infraFac infraFactory.Factory) Factory {
+	adminR := adminRepository.New(infraFac.MysqlInfra().GORM())
+	repoFactory := &factory{adminRepo: adminR}
 	return repoFactory
 }
 
-func (f *factory) AdminRepository() adminRepo.Repository {
-	return f.adminRepository
+func (f *factory) AdminRepository() adminRepository.Repository {
+	return f.adminRepo
 }
