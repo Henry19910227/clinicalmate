@@ -51,8 +51,16 @@ config/app/     # Config struct 與載入邏輯
 internal/       # 核心業務邏輯
 ```
 
-- 層級職責與命名規範 → [`internal/ARCHITECTURE.md`](internal/ARCHITECTURE.md)
+- App 頂層協調 → [`internal/app/ARCHITECTURE.md`](internal/app/ARCHITECTURE.md)
+- Config 載入 → [`internal/config/ARCHITECTURE.md`](internal/config/ARCHITECTURE.md)
+- Controller 層 → [`internal/controller/ARCHITECTURE.md`](internal/controller/ARCHITECTURE.md)
 - Factory / DI 接線 → [`internal/factory/ARCHITECTURE.md`](internal/factory/ARCHITECTURE.md)
+- Infra 基礎設施 → [`internal/infra/ARCHITECTURE.md`](internal/infra/ARCHITECTURE.md)
+- Model 資料結構 → [`internal/model/ARCHITECTURE.md`](internal/model/ARCHITECTURE.md)
+- Repository 層 → [`internal/repository/ARCHITECTURE.md`](internal/repository/ARCHITECTURE.md)
+- Router 路由 → [`internal/router/ARCHITECTURE.md`](internal/router/ARCHITECTURE.md)
+- Service 層 → [`internal/service/ARCHITECTURE.md`](internal/service/ARCHITECTURE.md)
+- Store 層 → [`internal/store/ARCHITECTURE.md`](internal/store/ARCHITECTURE.md)
 - DB 硬約束 → [`internal/database/CONSTRAINTS.md`](internal/database/CONSTRAINTS.md)
 
 ## 當前進度
