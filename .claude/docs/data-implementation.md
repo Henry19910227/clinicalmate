@@ -11,8 +11,7 @@ internal/
   store/<domain>/
     interface.go      # Store interface 定義
     store.go          # 跨 repo transaction + domain↔DB model mapping
-scripts/
-  sql/                # 建表 SQL 腳本（如果目錄不存在，執行任務前先建立）
+migrations/           # 建表 SQL 腳本（根目錄，非 internal/ 內）
 ```
 
 ## MCP 工具
@@ -47,26 +46,19 @@ scripts/
 
 **範本**：
 ```go
-package model
+package companion
 
-import (
-    "time"
-    "gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
-type User struct {
-    ID        uint           `gorm:"primaryKey;autoIncrement" json:"id"`
-    Name      string         `gorm:"column:name;not null"     json:"name"`
-    Email     string         `gorm:"column:email;uniqueIndex;not null" json:"email"`
-    CreatedAt time.Time      `gorm:"column:created_at;autoCreateTime"  json:"created_at"`
-    UpdatedAt time.Time      `gorm:"column:updated_at;autoUpdateTime"  json:"updated_at"`
-    DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index"           json:"deleted_at"`
-}
-
-func (User) TableName() string {
-    return "users"
+type Companion struct {
+    gorm.Model
+    Name   string `gorm:"column:name;not null"`            // 陪診師姓名
+    Mobile string `gorm:"column:mobile;not null"`          // 手機號碼
+    Active int    `gorm:"column:active;not null;default:1"` // 狀態（1: 啟用 / 0: 停用）
 }
 ```
+
+**欄位說明規範（強制）**：每個業務欄位必須在行尾加上 `// <中文說明>`，說明該欄位的業務含義。`gorm.Model` 內建欄位（id、created_at、updated_at、deleted_at）不需要額外注釋。
 
 **與 Notion 文件同步原則**：
 - 文件新增欄位 → struct 新增對應欄位 + 更新 SQL
@@ -75,7 +67,7 @@ func (User) TableName() string {
 
 ## 建表 SQL 腳本規範
 
-檔案位置：`scripts/sql/<domain>_<table>.sql`（如 `scripts/sql/patient_users.sql`）
+檔案位置：`migrations/<NNN>_create_<table>.sql`（如 `migrations/001_create_companions.sql`）
 
 **規範**：
 - 使用 `CREATE TABLE IF NOT EXISTS`
@@ -100,6 +92,48 @@ CREATE TABLE IF NOT EXISTS `users` (
     KEY `idx_users_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
+
+## Domain 文件規範
+
+每次完成 model struct 或建表 SQL 後，必須在 `.claude/docs/domain-<name>.md` 建立或更新對應文件。
+
+**檔案命名**：`.claude/docs/domain-<name>.md`（如 `domain-companion.md`、`domain-patient.md`）
+
+**必填內容**：
+
+```markdown
+## <Domain 名稱> Domain
+
+**資料表**：`<table_name>`
+**Notion 來源**：<Notion page URL 或路徑>
+**最後更新**：<YYYY-MM-DD>
+
+### 欄位
+
+| Go 欄位 | DB 欄位 | 型別 | 約束 | 說明 |
+|---------|---------|------|------|------|
+| Name    | name    | VARCHAR(100) | NOT NULL | 姓名 |
+| ...     | ...     | ...  | ...  | ...  |
+
+> `gorm.Model` 內含 `id`、`created_at`、`updated_at`、`deleted_at`，不重複列出。
+
+### 索引
+
+| 索引名稱 | 欄位 | 類型 |
+|---------|------|------|
+| idx_<table>_deleted_at | deleted_at | INDEX（soft delete） |
+
+### 業務說明
+
+<從 Notion 擷取的業務描述，一到三句>
+```
+
+**更新時機**：
+- 新增 domain → 建立新的 `domain-<name>.md`
+- 修改 model 欄位 → 同步更新對應 `domain-<name>.md`
+- 新增索引 → 更新索引表格
+
+---
 
 ## Repository 層實作規範
 

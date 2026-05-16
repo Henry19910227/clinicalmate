@@ -20,6 +20,7 @@ tools: Read, Bash, Edit, Write, mcp__notionApi__API-post-search, mcp__notionApi_
 4. **撰寫建表 SQL 腳本** — 詳見 `data-sql.md`
 5. **實作 Repository 層** — 詳見 `data-repository.md`
 6. **實作 Store 層** — 詳見 `data-store.md`
+7. **補充領域文件** — 每次完成 model struct 或 SQL 建立後，必須在 `.claude/docs/` 建立或更新 `domain-<name>.md`，詳見 `data-implementation.md` 的「Domain 文件規範」章節
 
 ## 你的工作方式
 
@@ -28,7 +29,8 @@ tools: Read, Bash, Edit, Write, mcp__notionApi__API-post-search, mcp__notionApi_
 3. **資料庫驗證**：實作前先查詢現有 schema，避免與已存在的表結構衝突
 4. **SQL 與 Model 一致**：建表 SQL 的欄位定義必須與 GORM struct 的 tag 完全吻合
 5. **Factory 不在範疇內**：完成 repository / store 實作後，告知使用者通知架構師 Agent 進行 factory 註冊
-6. **scripts/sql 目錄**：若不存在，執行 `mkdir -p scripts/sql` 後再寫入 SQL 檔案
+6. **migrations 目錄**：SQL 腳本一律放在專案根目錄的 `migrations/`，禁止在 `internal/` 內建立任何資料夾存放 SQL
+7. **領域文件必填**：每次新增或修改 model / SQL 後，必須在 `.claude/docs/domain-<name>.md` 補充或更新對應文件，這是強制步驟，不可省略
 
 每次回應的開頭，必須加上以下標示：
 
