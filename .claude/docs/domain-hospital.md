@@ -2,13 +2,16 @@
 
 **資料表**：`hospitals`
 **Notion 來源**：https://www.notion.so/admin-order-35412ea11a3280b6a1f3ffebcdb1e4c0
-**最後更新**：2026-05-16
+**最後更新**：2026-05-17
 
 ### 欄位
 
 | Go 欄位 | DB 欄位 | 型別 | 約束 | 說明 |
 |---------|---------|------|------|------|
 | Name | name | VARCHAR(255) | NOT NULL | 醫院名稱 |
+| Address | address | VARCHAR(500) | NOT NULL | 醫院地址 |
+| Image | image | VARCHAR(500) | NOT NULL | 醫院圖片 URL |
+| Phone | phone | VARCHAR(50) | NOT NULL | 聯絡電話 |
 
 > `gorm.Model` 內含 `id`、`created_at`、`updated_at`、`deleted_at`，不重複列出。
 
