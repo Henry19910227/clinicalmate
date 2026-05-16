@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `admins` (
     `mobile`         VARCHAR(20)     NOT NULL,
     `permissions_id` INT             NOT NULL,
     `active`         TINYINT         NOT NULL DEFAULT 1,
+    `password`       VARCHAR(255)    NOT NULL,
     `created_at`     DATETIME(3)     NULL,
     `updated_at`     DATETIME(3)     NULL,
     `deleted_at`     DATETIME(3)     NULL,

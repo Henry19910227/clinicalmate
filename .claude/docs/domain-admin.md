@@ -12,6 +12,7 @@
 | Mobile | mobile | VARCHAR(20) | NOT NULL, UNIQUE | 手機號碼，不可重複 |
 | PermissionsID | permissions_id | INT | NOT NULL | 所屬權限組 ID（如 1 代表超級管理員） |
 | Active | active | TINYINT | NOT NULL, DEFAULT 1 | 狀態：1 正常，0 失效 |
+| Password | password | VARCHAR(255) | NOT NULL | 登入密碼（雜湊儲存） |
 
 > `gorm.Model` 內含 `id`、`created_at`、`updated_at`、`deleted_at`，不重複列出。
 
